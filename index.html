@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipo Creativo Qantica: Roles y Conexiones</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* bg-gray-900 */
+            color: #e2e8f0; /* text-gray-200 */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to start to prevent excessive vertical centering on small screens */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: #2d3748; /* bg-gray-800 */
+            border-radius: 1rem; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Soft shadow for dark theme */
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .card {
+            background-color: #2d3748; /* bg-gray-800 */
+            border-radius: 0.75rem; /* Slightly less rounded for inner cards */
+            padding: 1rem;
+            margin: 0.75rem auto; /* Center cards horizontally within their column/section */
+            max-width: 350px; /* Limit card width for better readability */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Lighter shadow for cards on dark background */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.3s;
+            cursor: pointer;
+            border: 1px solid #4a5568; /* Darker border for dark theme */
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        .card-luciano {
+            background-color: #23877d; /* Darker Teal */
+            color: white;
+            box-shadow: 0 6px 15px rgba(35, 135, 125, 0.5);
+            border: none;
+        }
+        .card-luciano .text-lg {
+            color: #ffffff;
+        }
+        .card-luciano .text-sm {
+            color: #e0e7ff; /* Adjusted for contrast on dark teal */
+        }
+        .role-title {
+            font-weight: 700; /* Bold */
+            color: #cbd5e0; /* text-gray-300 */
+        }
+        .luciano-role-title {
+            color: #a0aec0; /* text-gray-400 for contrast on dark teal */
+        }
+        .section-title {
+            color: #2dd4bf; /* text-teal-400 */
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            text-align: center;
+            width: 100%;
+        }
+        .connection-arrow {
+            font-size: 1.5rem;
+            color: #718096; /* text-gray-400 */
+            text-align: center;
+            padding: 0 0.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .grid-cols-2-md {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-cols-3-md {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .grid-cols-3-lg {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .grid-cols-4-lg {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Budget Section Styles */
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            text-align: left;
+            color: #cbd5e0; /* text-gray-300 */
+        }
+        .budget-table th, .budget-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #4a5568; /* Darker border */
+        }
+        .budget-table th {
+            background-color: #4a5568; /* bg-gray-600 */
+            font-weight: 600;
+            color: #a0aec0; /* text-gray-400 */
+        }
+        .budget-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #23877d; /* Dark Teal for total row */
+            color: #ffffff; /* White for total text */
+        }
+        .budget-section {
+            background-color: #2d3748; /* bg-gray-800 */
+            border-color: #2dd4bf; /* border-teal-400 */
+            color: #e2e8f0; /* text-gray-200 */
+        }
+
+
+        /* SVG Organigram Styles */
+        .node-circle {
+            fill: #4a5568; /* Darker gray for nodes */
+            stroke: #2dd4bf; /* Teal stroke */
+            stroke-width: 2;
+            transition: all 0.3s ease-in-out;
+        }
+        /* Specific node colors - Adjusted for dark theme */
+        .node-luciano { fill: #23877d; stroke: #2dd4bf; } /* Dark Teal */
+        .node-agustina { fill: #10b981; stroke: #047857; } /* Emerald green */
+        .node-paola { fill: #047857; stroke: #065f46; } /* Darker emerald for Paola */
+        .node-maxi, .node-yadira { fill: #f59e0b; stroke: #d97706; } /* Amber */
+        .node-agente-ventas { fill: #ec4899; stroke: #be185d; } /* Rose */
+        .node-nico { fill: #84cc16; stroke: #65a30d; } /* Lime */
+        .node-daniel { fill: #3b82f6; stroke: #2563eb; } /* Blue */
+        .node-ayudante-maxi { fill: #facc15; stroke: #d97706; } /* Yellow */
+
+        .node-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 20px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+            font-weight: 600;
+            fill: #1a202c; /* Dark text for contrast on most nodes */
+        }
+        /* Text color adjustments for light nodes to be dark */
+        .node-luciano-text { fill: #ffffff; } /* White text for dark teal Luciano */
+        .node-agustina-text { fill: #1a202c; }
+        .node-paola-text { fill: #ffffff; } /* White text for dark emerald Paola */
+        .node-daniel-text { fill: #ffffff; }
+        .node-maxi-text, .node-yadira-text, .node-nico-text, .node-ayudante-maxi-text { fill: #1a202c; }
+
+
+        .node-subtext {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+            fill: #718096; /* text-gray-400 for subtext */
+        }
+        /* Subtext color adjustments for specific nodes */
+        .node-luciano-subtext { fill: #e2e8f0; } /* text-gray-200 for dark teal Luciano */
+        .node-agustina-subtext { fill: #1a202c; }
+        .node-paola-subtext { fill: #e2e8f0; } /* text-gray-200 for dark emerald Paola */
+        .node-daniel-subtext { fill: #e2e8f0; }
+        .node-maxi-subtext, .node-yadira-subtext, .node-nico-subtext, .node-ayudante-maxi-subtext { fill: #1a202c; }
+
+
+        .line {
+            stroke: #718096; /* text-gray-400 */
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.3s ease-in-out, stroke-width 0.3s ease-in-out;
+        }
+        .highlighted-line {
+            stroke: #2dd4bf; /* text-teal-400 for highlighted lines */
+            stroke-width: 4; /* Thicker when highlighted */
+        }
+
+        .node-group:hover .node-circle {
+            transform: scale(1.05);
+            filter: brightness(1.2); /* Slightly brighter on hover */
+        }
+        .node-group:hover .node-text, .node-group:hover .node-subtext {
+            /* No change on hover for text */
+        }
+
+        /* Interactive Highlight */
+        .highlighted-card {
+            border: 2px solid #2dd4bf !important; /* text-teal-400 border for highlight */
+            box-shadow: 0 0 15px rgba(45, 212, 191, 0.6) !important; /* Glow effect matching teal */
+        }
+
+        /* Text description styles in cards */
+        .card-description-wrapper {
+            max-height: 180px; /* Adjusted initial height to show more text */
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 0.5rem; /* Space for the button */
+        }
+        .card-description-wrapper.expanded {
+            max-height: none; /* Expand to full height */
+            overflow: visible;
+        }
+        .read-more-btn {
+            margin-top: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background-color: #14b8a6; /* teal-500 */
+            color: white;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .read-more-btn:hover {
+            background-color: #0d9488; /* teal-600 */
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #2d3748; /* bg-gray-800 */
+            color: #e2e8f0; /* text-gray-200 */
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+            border: 1px solid #2dd4bf; /* Teal border for modal */
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #a0aec0; /* text-gray-400 */
+            transition: color 0.2s;
+        }
+        .modal-close-btn:hover {
+            color: #cbd5e0; /* text-gray-300 */
+        }
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2dd4bf; /* text-teal-400 */
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .modal-subtitle {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #a0aec0; /* text-gray-400 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .modal-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e2e8f0; /* text-gray-200 */
+            text-align: left;
+        }
+
+        /* New Layout for Sections */
+        .main-sections-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .main-sections-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        .section-block {
+            background-color: #4a5568; /* bg-gray-700 for distinct sections */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow for sections */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid; /* Defined by specific section colors */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .section-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .section-block .card {
+            width: 100%;
+            max-width: none;
+        }
+
+        /* Specific colors for section blocks */
+        .section-liderazgo {
+            border-color: #2dd4bf; /* border-teal-400 */
+        }
+        .section-produccion {
+            border-color: #60a5fa; /* border-blue-400 */
+        }
+        .section-bitacora {
+            border-color: #4ade80; /* border-green-400 */
+        }
+        .section-producto {
+            border-color: #f87171; /* border-red-400 */
+        }
+
+        /* Responsive adjustments for SVG */
+        @media (max-width: 767px) {
+            .svg-organigram {
+                transform: scale(0.6);
+                transform-origin: top center;
+                height: 750px;
+            }
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            .modal-title {
+                font-size: 1.5rem;
+            }
+            .modal-subtitle {
+                font-size: 1rem;
+            }
+        }
+        @media (min-width: 768px) {
+             .detailed-cards-section {
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+            .detailed-cards-section > div {
+                flex: 1;
+                min-width: 300px;
+                max-width: 380px;
+            }
+        }
+        @media (min-width: 1024px) {
+             .detailed-cards-section > div {
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="container flex flex-col items-center">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center mb-6 text-gray-200">Equipo Creativo Qantica: Roles y Conexiones</h1>
+        <p class="text-md sm:text-lg text-center text-gray-300 mb-8">Mapa central del equipo Creativo dentro de Qantica</p>
+
+        <!-- SVG Organigram Section -->
+        <div class="w-full mb-12" style="max-width: 1000px;">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-200">Estructura del Equipo Creativo</h2>
+            <svg width="100%" height="auto" viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid meet" class="svg-organigram">
+                <!-- Arrowhead definition -->
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#718096" />
+                    </marker>
+                </defs>
+
+                <!-- Nodes (Circles and Text) -->
+                <!-- Luciano -->
+                <g class="node-group" data-target="card-luciano" data-node-id="luciano">
+                    <circle cx="500" cy="80" r="60" class="node-circle node-luciano"></circle>
+                    <text x="500" y="70" class="node-text node-luciano-text">Luciano</text>
+                    <text x="500" y="95" class="node-subtext node-luciano-subtext">(Líder General)</text>
+                </g>
+
+                <!-- Second Level -->
+                <!-- Agustina -->
+                <g class="node-group" data-target="card-agustina" data-node-id="agustina">
+                    <circle cx="200" cy="250" r="60" class="node-circle node-agustina"></circle>
+                    <text x="200" y="240" class="node-text node-agustina-text">Agustina Rozen</text>
+                    <text x="200" y="265" class="node-subtext node-agustina-subtext">(Bitácora y Perfil)</text>
+                </g>
+
+                <!-- Maxi -->
+                <g class="node-group" data-target="card-maxi" data-node-id="maxi">
+                    <circle cx="400" cy="250" r="60" class="node-circle node-maxi"></circle>
+                    <text x="400" y="240" class="node-text node-maxi-text">Maxi Dubois</text>
+                    <text x="400" y="265" class="node-subtext node-maxi-subtext">(Prod. Ejecutivo LATAM)</text>
+                </g>
+
+                <!-- Ayudante Maxi (New Node) -->
+                <g class="node-group" data-target="card-maxi-ayudante" data-node-id="ayudante-maxi">
+                    <circle cx="400" cy="420" r="60" class="node-circle node-ayudante-maxi"></circle>
+                    <text x="400" y="410" class="node-text node-ayudante-maxi-text">Ayudante Maxi</text>
+                    <text x="400" y="435" class="node-subtext node-ayudante-maxi-subtext">(Soporte Producción)</text>
+                </g>
+
+                <!-- Yadira -->
+                <g class="node-group" data-target="card-yadira" data-node-id="yadira">
+                    <circle cx="600" cy="250" r="60" class="node-circle node-yadira"></circle>
+                    <text x="600" y="240" class="node-text node-yadira-text">Yadira Ávalos</text>
+                    <text x="600" y="265" class="node-subtext node-yadira-subtext">(Prod. Ejecutiva España)</text>
+                </g>
+
+                <!-- Daniel -->
+                <g class="node-group" data-target="card-daniel" data-node-id="daniel">
+                    <circle cx="800" cy="250" r="60" class="node-circle node-daniel"></circle>
+                    <text x="800" y="240" class="node-text node-daniel-text">Daniel Ballesteros</text>
+                    <text x="800" y="265" class="node-subtext node-daniel-subtext">(Producto Q Testeo)</text>
+                </g>
+
+                <!-- Third Level -->
+                <!-- Paola (formerly Renata) -->
+                <g class="node-group" data-target="card-paola" data-node-id="paola">
+                    <circle cx="200" cy="420" r="60" class="node-circle node-paola"></circle>
+                    <text x="200" y="410" class="node-text node-paola-text">Paola</text>
+                    <text x="200" y="435" class="node-subtext node-paola-subtext">(Bitácora - Redes)</text>
+                </g>
+
+                <!-- Agente de Ventas - Moved to Nico's level -->
+                <g class="node-group" data-target="card-agente-ventas" data-node-id="agente-ventas">
+                    <circle cx="700" cy="590" r="60" class="node-circle node-agente-ventas"></circle>
+                    <text x="700" y="580" class="node-text node-agente-ventas-text">Agente de Ventas</text>
+                    <text x="700" y="605" class="node-subtext node-agente-ventas-subtext">(Markets y Plataformas)</text>
+                </g>
+
+                <!-- Fourth Level -->
+                <!-- Nico -->
+                <g class="node-group" data-target="card-nico" data-node-id="nico">
+                    <circle cx="200" cy="590" r="60" class="node-circle node-nico"></circle>
+                    <text x="200" y="580" class="node-text node-nico-text">Nico Borello</text>
+                    <text x="200" y="605" class="node-subtext node-nico-subtext">(Community Manager)</text>
+                </g>
+
+
+                <!-- Lines/Arrows - Adjusted for new Agente de Ventas position -->
+                <!-- Luciano to Agustina -->
+                <line x1="500" y1="140" x2="200" y2="190" class="line" data-from="luciano" data-to="agustina"></line>
+                <!-- Luciano to Maxi -->
+                <line x1="500" y1="140" x2="400" y2="190" class="line" data-from="luciano" data-to="maxi"></line>
+                <!-- Luciano to Yadira -->
+                <line x1="500" y1="140" x2="600" y2="190" class="line" data-from="luciano" data-to="yadira"></line>
+                <!-- Luciano to Daniel -->
+                <line x1="500" y1="140" x2="800" y2="190" class="line" data-from="luciano" data-to="daniel"></line>
+
+                <!-- Agustina to Paola (formerly Renata) -->
+                <line x1="200" y1="310" x2="200" y2="360" class="line" data-from="agustina" data-to="paola"></line>
+
+                <!-- Maxi to Ayudante Maxi (New Line) -->
+                <line x1="400" y1="310" x2="400" y2="360" class="line" data-from="maxi" data-to="ayudante-maxi"></line>
+
+                <!-- Maxi to Agente de Ventas - adjusted to new position -->
+                <line x1="400" y1="310" x2="700" y2="530" class="line" data-from="maxi" data-to="agente-ventas"></line>
+                <!-- Yadira to Agente de Ventas - adjusted to new position -->
+                <line x1="600" y1="310" x2="700" y2="530" class="line" data-from="yadira" data-to="agente-ventas"></line>
+
+                <!-- Paola to Nico (formerly Renata to Nico) -->
+                <line x1="200" y1="480" x2="200" y2="530" class="line" data-from="paola" data-to="nico"></line>
+
+            </svg>
+        </div>
+
+        <div class="w-full text-center text-gray-400 text-sm mt-8">
+            <p>A continuación, encontrará los perfiles detallados del equipo:</p>
+        </div>
+
+        <!-- Detailed Card Sections - New Layout -->
+        <div class="main-sections-grid">
+            <!-- Luciano - Central Figure (Keeping for detailed text) -->
+            <div id="section-luciano" class="section-block section-liderazgo">
+                <h3 class="section-title">Liderazgo General</h3>
+                 <div id="card-luciano" class="card card-luciano">
+                    <h2 class="text-lg font-bold">Luciano</h2>
+                    <p class="text-sm luciano-role-title mb-2">Líder y Orquestador General</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left">Encargado de orquestar y liderar el equipo Creativo, gestionando el orden y la eficiencia. Su rol principal es garantizar la coherencia operativa de cada área, alineada a la visión general del proyecto. Mantiene contacto constante con los equipos de producción, bitácora, redes, ventas y producto para supervisar procesos, evaluar resultados y ajustar la estrategia según sea necesario. Establece una conexión continua con la industria audiovisual. Luciano articula todas las dinámicas internas y vela por que cada paso, desde la integración del guionista hasta el lanzamiento del producto al mercado, mantenga un estándar de calidad y propósito inquebrantable.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+            </div>
+
+            <!-- Producción Ejecutiva Section -->
+            <div id="section-produccion-ejecutiva" class="section-block section-produccion">
+                <h3 class="section-title">Producción Ejecutiva</h3>
+                <div id="card-maxi" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Maxi Dubois</h4>
+                    <p class="text-sm role-title">Productor Ejecutivo LATAM</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">Con una sólida trayectoria de más de 40 películas, Maxi lidera la producción ejecutiva en América Latina. Su rol es articular la pata productora desde la región, en coordinación directa con Yadira en Europa. Se encarga de vincular al equipo con guionistas estratégicos, alimentar el pipeline de proyectos y acercarlos al área de Perfiles. Maxi también trabaja estrechamente con el Agente de Ventas para validar el potencial comercial de los guiones y con Luciano para ajustar las prioridades productivas según los intereses del mercado.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+                <div id="card-maxi-ayudante" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Ayudante Maxi</h4>
+                    <p class="text-sm role-title">Soporte Producción Ejecutiva</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">El Ayudante de Maxi ofrece soporte continuo al área de Producción Ejecutiva, colaborando en la gestión diaria, la coordinación de tareas y el seguimiento de proyectos en desarrollo. Su rol es crucial para mantener la eficiencia operativa y liberar tiempo para que Maxi se enfoque en las decisiones estratégicas y las relaciones clave.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+                <div id="card-yadira" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Yadira Ávalos</h4>
+                    <p class="text-sm role-title">Productora Ejecutiva España</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">Yadira lidera el brazo europeo de Producción Ejecutiva, aportando una trayectoria con 35 proyectos y premios a nivel internacional. Es la base operativa en España y cuenta con su propia productora, lo que le permite una visión integral de la viabilidad de los proyectos. En constante coordinación con Maxi, su enfoque es atraer perfiles relevantes del mercado español y europeo e integrarlos al ecosistema interno. Su visión productiva se centra en conformar equipos sólidos, impulsar desarrollos que superen el exigente Filtro Q y posicionar proyectos con potencial de concretarse y circular exitosamente en el mercado europeo. Junto a Maxi y el Agente de Ventas, busca validar la eficacia del sistema a través de casos concretos de éxito que demuestren el valor de la metodología.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+                <div id="card-agente-ventas" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Agente de Ventas</h4>
+                    <p class="text-sm role-title">Contacto con Markets y Plataformas</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">El Agente de Ventas (que podría ser Saura o María) es el puente fundamental entre el equipo y los grandes mercados del audiovisual. Su función principal es mantener un feedback constante con plataformas, distribuidores y festivales. Con una vasta experiencia en ferias, eventos y mercados internacionales, esta persona detecta oportunidades estratégicas, abre puertas clave y propone los tipos de contenido con mayor potencial comercial. Además, se vincula con Maxi y Yadira para impulsar la venta de proyectos desarrollados internamente y colabora con Luciano para priorizar las propuestas según la estrategia general de la organización.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+            </div>
+
+            <!-- Bitácora y Redes Section -->
+            <div id="section-bitacora-redes" class="section-block section-bitacora">
+                <h3 class="section-title">Bitácora y Redes</h3>
+                <div id="card-agustina" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Agustina Rozen</h4>
+                    <p class="text-sm role-title">Bitácora y Perfil</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">Agustina lidera dos áreas fundamentales: Perfiles y Bitácora. En Perfiles, se encarga de recibir y clasificar a cada guionista que se incorpora, registrando datos esenciales (tipo de proyecto, géneros, país de origen) para una asignación estratégica según las necesidades del equipo. En Bitácora, profundiza en el elemento creativo del 'making-of', documentando detalladamente el proceso de cada autor y evaluando los perfiles que acceden al sistema por parte de Maxi y Yadira. Mantiene una comunicación constante con Paola para asegurar la fluidez del proceso y la generación de contenido valioso para redes y comunicación.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+                <div id="card-paola" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Paola</h4>
+                    <p class="text-sm role-title">Bitácora - Redes</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">Paola complementa la labor de Agustina en la Bitácora, colaborando en la observación, registro y sistematización del proceso creativo de cada guionista. Su enfoque principal radica en cómo ese contenido puede transformarse en piezas comunicacionales impactantes para redes sociales. Trabaja en estrecha colaboración con Nico en la definición de materiales a publicar, la narrativa interna del equipo y la imagen que se proyecta al exterior. Además, Paola participa activamente en el desarrollo de estrategias de marketing digital, ideando junto a Agustina y Nico nuevas formas innovadoras de posicionar a los guionistas y el distintivo método de trabajo del equipo.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+                <div id="card-nico" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Nico Borello</h4>
+                    <p class="text-sm role-title">Community Manager</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">Nico es el responsable de la gestión integral y el desarrollo estratégico de las redes sociales. Su función no se limita a la publicación de contenido; también edita videos de alta calidad, crea narrativas potentes y construye una identidad visual coherente para cada historia. Su tarea trasciende la mera difusión, dialogando activamente con Agustina y Paola para definir qué materiales se subirán y cómo se presentarán, transformando el contenido de Bitácora en piezas altamente atractivas para la audiencia. Asimismo, colabora en el diseño de estrategias de marketing, planificando junto a sus compañeras las líneas comunicacionales clave y aprovechando el proceso de cada guionista como una oportunidad estratégica de posicionamiento.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+            </div>
+
+            <!-- Producto Q Testeo Section -->
+            <div id="section-producto-testeo" class="section-block section-producto">
+                <h3 class="section-title">Producto Q Testeo</h3>
+                <div id="card-daniel" class="card">
+                    <h4 class="text-lg font-bold text-gray-200">Daniel Ballesteros</h4>
+                    <p class="text-sm role-title">Producto Q Testeo</p>
+                    <div class="card-description-wrapper">
+                        <p class="text-sm text-left text-gray-200">Daniel lidera el testeo de la parte creativa del producto. Está al frente de la evaluación y ajuste diario del Método Q, asegurando que funcione como una herramienta de mejora continua para los guionistas. Mantiene un contacto directo con David y Tomi del equipo de Tecnología, coordinando el desarrollo técnico del sistema. Su labor abarca el testeo riguroso, la observación detallada, la retroalimentación constructiva y el ajuste preciso. A través de sus pruebas diarias, Daniel se convierte en el nexo esencial entre la teoría y la práctica, garantizando que la propuesta de valor ofrecida a los guionistas sea consistentemente útil, escalable y diferenciadora en el mercado.</p>
+                    </div>
+                    <button class="read-more-btn">Leer más</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Section -->
+        <div class="w-full max-w-3xl mt-12 bg-gray-800 rounded-lg p-6 shadow-md border border-teal-400 budget-section">
+            <h2 class="text-2xl font-bold text-center mb-6 text-teal-400">Presupuesto del Equipo (en USD)</h2>
+            <div class="overflow-x-auto">
+                <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Presupuesto Mensual</th>
+                            <th>Presupuesto Anual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Luciano</td>
+                            <td>$ 8.000</td>
+                            <td>$ 96.000</td>
+                        </tr>
+                        <tr>
+                            <td>Yadira</td>
+                            <td>$ 2.500</td>
+                            <td>$ 30.000</td>
+                        </tr>
+                        <tr>
+                            <td>Maxi</td>
+                            <td>$ 2.800</td>
+                            <td>$ 33.600</td>
+                        </tr>
+                        <tr>
+                            <td>Ayudante Maxi</td>
+                            <td>$ 1.500</td>
+                            <td>$ 18.000</td>
+                        </tr>
+                        <tr>
+                            <td>Agustina</td>
+                            <td>$ 3.000</td>
+                            <td>$ 36.000</td>
+                        </tr>
+                        <tr>
+                            <td>Daniel</td>
+                            <td>$ 3.500</td>
+                            <td>$ 42.000</td>
+                        </tr>
+                        <tr>
+                            <td>Paola</td>
+                            <td>$ 1.700</td>
+                            <td>$ 20.400</td>
+                        </tr>
+                        <tr>
+                            <td>Agente de Ventas</td>
+                            <td>$ 2.500</td>
+                            <td>$ 30.000</td>
+                        </tr>
+                        <tr>
+                            <td>Nico</td>
+                            <td>$ 1.500</td>
+                            <td>$ 18.000</td>
+                        </tr>
+                        <tr>
+                            <td>Extras</td>
+                            <td>$ 2.083</td>
+                            <td>$ 25.000</td>
+                        </tr>
+                        <tr>
+                            <td>Oficina Canarias</td>
+                            <td>$ 600</td>
+                            <td>$ 7.200</td>
+                        </tr>
+                        <tr>
+                            <td>Oficina Argentina</td>
+                            <td>$ 600</td>
+                            <td>$ 7.200</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>Total</td>
+                            <td>$ 30.283</td>
+                            <td>$ 363.400</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="w-full text-center text-gray-400 text-sm mt-8">
+            <p>Este canvas visualiza las interconexiones clave del equipo para una operación fluida.</p>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="detailModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+            <h3 id="modalTitle" class="modal-title"></h3>
+            <p id="modalSubtitle" class="modal-subtitle"></p>
+            <p id="modalDescription" class="modal-description"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nodeGroups = document.querySelectorAll('.svg-organigram .node-group');
+            const detailCards = document.querySelectorAll('.section-block .card');
+            const modalOverlay = document.getElementById('detailModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const modalDescription = document.getElementById('modalDescription');
+
+            // Function to open the modal
+            const openModal = (title, subtitle, description) => {
+                modalTitle.textContent = title;
+                modalSubtitle.textContent = subtitle;
+                modalDescription.textContent = description;
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling body when modal is open
+            };
+
+            // Function to close the modal
+            const closeModal = () => {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore body scrolling
+            };
+
+            // Close modal when clicking the 'x' button
+            closeModalBtn.addEventListener('click', closeModal);
+
+            // Close modal when clicking outside the content
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // --- Functionality for Read More buttons (now opening modal) ---
+            detailCards.forEach(card => {
+                const descriptionWrapper = card.querySelector('.card-description-wrapper');
+                const descriptionTextElement = descriptionWrapper ? descriptionWrapper.querySelector('p') : null;
+                const readMoreBtn = card.querySelector('.read-more-btn');
+
+                if (!descriptionWrapper || !descriptionTextElement || !readMoreBtn) {
+                    return; // Skip if essential elements are missing
+                }
+
+                // Check if text overflows to show "Leer más" button
+                const tempDiv = document.createElement('div');
+                tempDiv.style.visibility = 'hidden';
+                tempDiv.style.position = 'absolute';
+                tempDiv.style.height = 'auto';
+                // Clone the paragraph and append to tempDiv to correctly measure height
+                const clonedText = descriptionTextElement.cloneNode(true);
+                tempDiv.appendChild(clonedText);
+
+                tempDiv.style.width = descriptionWrapper.offsetWidth + 'px';
+                tempDiv.style.padding = window.getComputedStyle(descriptionWrapper).padding;
+                tempDiv.style.fontFamily = window.getComputedStyle(descriptionTextElement).fontFamily;
+                tempDiv.style.fontSize = window.getComputedStyle(descriptionTextElement).fontSize;
+                tempDiv.style.lineHeight = window.getComputedStyle(descriptionTextElement).lineHeight;
+                tempDiv.style.whiteSpace = 'normal';
+
+                document.body.appendChild(tempDiv);
+                const isOverflowing = tempDiv.scrollHeight > descriptionWrapper.clientHeight;
+                document.body.removeChild(tempDiv);
+
+                if (isOverflowing) {
+                    readMoreBtn.classList.remove('hidden');
+                } else {
+                    readMoreBtn.classList.add('hidden'); // Hide button if content fits
+                }
+
+                readMoreBtn.addEventListener('click', () => {
+                    // Robust way to get title (h2 for Luciano, h4 for others)
+                    const cardTitleElement = card.querySelector('h2') || card.querySelector('h4');
+                    const title = cardTitleElement ? cardTitleElement.textContent : 'Título Desconocido';
+
+                    // Robust way to get subtitle (luciano-role-title or role-title)
+                    const cardSubtitleElement = card.querySelector('.luciano-role-title') || card.querySelector('.role-title');
+                    const subtitle = cardSubtitleElement ? cardSubtitleElement.textContent : 'Rol Desconocido';
+
+                    const fullDescription = descriptionTextElement.textContent;
+                    openModal(title, subtitle, fullDescription);
+                });
+            });
+
+
+            // --- Functionality for SVG nodes highlight and opening modal ---
+            nodeGroups.forEach(group => {
+                group.addEventListener('mouseover', () => {
+                    const targetId = group.dataset.target;
+                    const nodeId = group.dataset.nodeId; // Get the ID of the hovered node
+
+                    if (targetId) {
+                        const targetCard = document.getElementById(targetId);
+                        if (targetCard) {
+                            targetCard.classList.add('highlighted-card');
+                        }
+                    }
+
+                    // Highlight connected lines
+                    if (nodeId) {
+                        const connectedLines = document.querySelectorAll(`.line[data-from="${nodeId}"], .line[data-to="${nodeId}"]`);
+                        connectedLines.forEach(line => {
+                            line.classList.add('highlighted-line');
+                        });
+                    }
+                });
+
+                group.addEventListener('mouseout', () => {
+                    const targetId = group.dataset.target;
+                    const nodeId = group.dataset.nodeId; // Get the ID of the hovered node
+
+                    if (targetId) {
+                        const targetCard = document.getElementById(targetId);
+                        if (targetCard) {
+                            targetCard.classList.remove('highlighted-card');
+                        }
+                    }
+
+                    // Remove highlight from connected lines
+                    if (nodeId) {
+                        const connectedLines = document.querySelectorAll(`.line[data-from="${nodeId}"], .line[data-to="${nodeId}"]`);
+                        connectedLines.forEach(line => {
+                            line.classList.remove('highlighted-line');
+                        });
+                    }
+                });
+
+                group.addEventListener('click', () => {
+                    const targetId = group.dataset.target;
+                    if (targetId) {
+                        const targetCard = document.getElementById(targetId);
+                        if (targetCard) {
+                            // Scroll to the card first
+                            targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                            // Briefly highlight on click
+                            targetCard.classList.add('highlighted-card');
+                            setTimeout(() => {
+                                targetCard.classList.remove('highlighted-card');
+                            }, 1000);
+
+                            // Open modal with full text
+                            const cardTitleElement = targetCard.querySelector('h2') || targetCard.querySelector('h4');
+                            const title = cardTitleElement ? cardTitleElement.textContent : 'Título Desconocido';
+
+                            const cardSubtitleElement = targetCard.querySelector('.luciano-role-title') || targetCard.querySelector('.role-title');
+                            const subtitle = cardSubtitleElement ? cardSubtitleElement.textContent : 'Rol Desconocido';
+                            
+                            const fullDescription = targetCard.querySelector('.card-description-wrapper p').textContent;
+                            openModal(title, subtitle, fullDescription);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
